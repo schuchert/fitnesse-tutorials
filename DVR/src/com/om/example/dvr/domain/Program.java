@@ -1,5 +1,9 @@
 package com.om.example.dvr.domain;
 
+import java.util.Date;
+
+import com.om.example.util.DateUtil;
+
 public class Program {
 
    public final String programName;
@@ -32,5 +36,9 @@ public class Program {
       return timeSlot.channel == program.timeSlot.channel
             && programName.equals(program.programName)
             && episodeName.equals(program.episodeName);
+   }
+
+   public boolean isOn(Date date) {
+      return DateUtil.instance().isSameDate(timeSlot.startDateTime, date);
    }
 }

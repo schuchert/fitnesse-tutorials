@@ -1,5 +1,6 @@
 package com.om.example.dvr.domain;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -44,6 +45,16 @@ public class SeasonPassManager {
 
       for (Program current : toDoList)
          if (current.getId().equals(programId))
+            result.add(current);
+
+      return result;
+   }
+
+   public List<Program> toDoListContentsOn(Date date) {
+      List<Program> result = new LinkedList<Program>();
+
+      for (Program current : toDoList)
+         if (current.isOn(date))
             result.add(current);
 
       return result;

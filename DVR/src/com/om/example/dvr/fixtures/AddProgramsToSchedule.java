@@ -2,11 +2,11 @@ package com.om.example.dvr.fixtures;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import com.om.example.dvr.domain.ConflictingProgramException;
 import com.om.example.dvr.domain.Program;
 import com.om.example.dvr.domain.Schedule;
+import com.om.example.util.DateUtil;
 
 public class AddProgramsToSchedule {
    static SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy|h:mm");
@@ -48,10 +48,10 @@ public class AddProgramsToSchedule {
       this.minutes = minutes;
    }
 
-   public void execute() {
+   public void execute() throws ParseException {
       try {
-         Program p = schedule.addProgram(programName, episodeName, channel,
-               buildStartDateTime(), minutes);
+         Program p = schedule.addProgram(programName, episodeName, channel, DateUtil
+               .instance().buildDate(date, startTime), minutes);
          lastId = p.getId();
          lastCreationSuccessful = true;
       } catch (ConflictingProgramException e) {
@@ -67,14 +67,5 @@ public class AddProgramsToSchedule {
       if (lastCreationSuccessful)
          return lastId;
       return "n/a";
-   }
-
-   private Date buildStartDateTime() {
-      try {
-         String dateTime = String.format("%s|%s", date, startTime);
-         return dateFormat.parse(dateTime);
-      } catch (ParseException e) {
-         throw new RuntimeException("Unable to prase date/time", e);
-      }
    }
 }
