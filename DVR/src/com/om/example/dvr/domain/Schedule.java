@@ -29,11 +29,26 @@ public class Schedule {
          }
    }
 
+   public List<Program> findProgramsNamedOn(String programName, int channel) {
+      List<Program> result = new LinkedList<Program>();
+
+      for (Program program : scheduledPrograms)
+         if (program.timeSlot.channel == channel
+               && program.programName.equals(programName))
+            result.add(program);
+
+      return result;
+   }
+
    private boolean conflictsWithOtherTimeSlots(TimeSlot timeSlot) {
       for (Program current : scheduledPrograms)
          if (current.timeSlot.conflictsWith(timeSlot))
             return true;
 
       return false;
+   }
+
+   public void clear() {
+      scheduledPrograms.clear();
    }
 }

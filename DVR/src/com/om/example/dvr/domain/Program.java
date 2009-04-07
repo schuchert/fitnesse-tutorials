@@ -15,4 +15,22 @@ public class Program {
    public String getId() {
       return String.format("(%s:%d)", programName, timeSlot.channel);
    }
+
+   public String getProgramName() {
+      return programName;
+   }
+
+   public String getEpisodeName() {
+      return episodeName;
+   }
+
+   public TimeSlot getTimeSlot() {
+      return timeSlot;
+   }
+
+   public boolean sameEpisodeAs(Program program) {
+      return timeSlot.channel == program.timeSlot.channel
+            && programName.equals(program.programName)
+            && episodeName.equals(program.episodeName);
+   }
 }
