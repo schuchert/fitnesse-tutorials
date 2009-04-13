@@ -37,7 +37,7 @@ public class GenerateProgramsTest {
 
       List<Program> results = CreateSeasonPassFor.getSeasonPassManager()
             .toDoListContentsOn(DateUtil.instance().formatDate("3/4/2008"));
-      assertEquals(4, results.size());
+      assertEquals(3, results.size());
    }
 
    @Test(expected = ConflictingProgramException.class)

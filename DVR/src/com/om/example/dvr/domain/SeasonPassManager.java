@@ -5,58 +5,82 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SeasonPassManager {
-   private final Schedule schedule;
-   private List<Program> toDoList = new LinkedList<Program>();
+	private final Schedule schedule;
+	private List<Program> toDoList = new LinkedList<Program>();
+	private int numberOfRecorders = 1;
 
-   public SeasonPassManager(Schedule schedule) {
-      this.schedule = schedule;
-   }
+	public SeasonPassManager(Schedule schedule) {
+		this.schedule = schedule;
+	}
 
-   public int sizeOfToDoList() {
-      return toDoList.size();
-   }
+	public void setNumberOfRecorders(int number) {
+		this.numberOfRecorders = number;
+	}
 
-   public Program createNewSeasonPass(String programName, int channel) {
-      List<Program> programsFound = schedule.findProgramsNamedOn(programName, channel);
+	public int sizeOfToDoList() {
+		return toDoList.size();
+	}
 
-      for (Program current : programsFound)
-         if (!alreadyInToDoList(current))
-            toDoList.add(current);
+	public Program createNewSeasonPass(String programName, int channel) {
+		List<Program> programsFound = schedule.findProgramsNamedOn(programName,
+				channel);
 
-      if (programsFound.size() > 0)
-         return programsFound.get(0);
-      return null;
-   }
+		for (Program current : programsFound)
+			if (!alreadyInToDoList(current)
+					&& !conflictsWithExistingSchedule(current))
+				toDoList.add(current);
 
-   private boolean alreadyInToDoList(Program candidate) {
-      for (Program current : toDoList)
-         if (current.sameEpisodeAs(candidate))
-            return true;
+		if (programsFound.size() > 0)
+			return programsFound.get(0);
+		return null;
+	}
 
-      return false;
-   }
+	private boolean conflictsWithExistingSchedule(Program program) {
+		int remainingConflicts = numberOfRecorders - 1;
 
-   public Iterable<?> toDoListIterator() {
-      return toDoList;
-   }
+		for (Program current : toDoList)
+			if (current.hasTimeConflictWith(program)) {
+				--remainingConflicts;
+				if (remainingConflicts < 0)
+					return true;
+			}
 
-   public List<Program> toDoListContentsFor(String programId) {
-      List<Program> result = new LinkedList<Program>();
+		return remainingConflicts < 0;
+	}
 
-      for (Program current : toDoList)
-         if (current.getId().equals(programId))
-            result.add(current);
+	private boolean alreadyInToDoList(Program candidate) {
+		for (Program current : toDoList)
+			if (current.sameEpisodeAs(candidate))
+				return true;
 
-      return result;
-   }
+		return false;
+	}
 
-   public List<Program> toDoListContentsOn(Date date) {
-      List<Program> result = new LinkedList<Program>();
+	public Iterable<?> toDoListIterator() {
+		return toDoList;
+	}
 
-      for (Program current : toDoList)
-         if (current.isOn(date))
-            result.add(current);
+	public List<Program> toDoListContentsFor(String programId) {
+		List<Program> result = new LinkedList<Program>();
 
-      return result;
-   }
+		for (Program current : toDoList)
+			if (programId.length() == 0 || current.getId().equals(programId))
+				result.add(current);
+
+		return result;
+	}
+
+	public List<Program> toDoListContentsOn(Date date) {
+		List<Program> result = new LinkedList<Program>();
+
+		for (Program current : toDoList)
+			if (current.isOn(date))
+				result.add(current);
+
+		return result;
+	}
+
+	public void clearToDoList() {
+		toDoList.clear();
+	}
 }

@@ -9,63 +9,67 @@ import com.om.example.dvr.domain.Schedule;
 import com.om.example.util.DateUtil;
 
 public class AddProgramsToSchedule {
-   static SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy|h:mm");
-   private static Schedule schedule = new Schedule();
-   private int channel;
-   private String date;
-   private String startTime;
-   private int minutes;
-   private String programName;
-   private String episodeName;
-   private String lastId;
-   private boolean lastCreationSuccessful;
+	static SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy|h:mm");
+	private static Schedule schedule = new Schedule();
+	private int channel;
+	private String date;
+	private String startTime;
+	private int minutes;
+	private String programName;
+	private String episodeName;
+	private String lastId;
+	private boolean lastCreationSuccessful;
 
-   public static Schedule getSchedule() {
-      return schedule;
-   }
+	public static void resetSchedule() {
+		schedule = new Schedule();
+	}
 
-   public void setName(String name) {
-      this.programName = name;
-   }
+	public static Schedule getSchedule() {
+		return schedule;
+	}
 
-   public void setEpisode(String name) {
-      this.episodeName = name;
-   }
+	public void setName(String name) {
+		this.programName = name;
+	}
 
-   public void setChannel(int channel) {
-      this.channel = channel;
-   }
+	public void setEpisode(String name) {
+		this.episodeName = name;
+	}
 
-   public void setDate(String date) {
-      this.date = date;
-   }
+	public void setChannel(int channel) {
+		this.channel = channel;
+	}
 
-   public void setStartTime(String startTime) {
-      this.startTime = startTime;
-   }
+	public void setDate(String date) {
+		this.date = date;
+	}
 
-   public void setMinutes(int minutes) {
-      this.minutes = minutes;
-   }
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
 
-   public void execute() throws ParseException {
-      try {
-         Program p = schedule.addProgram(programName, episodeName, channel, DateUtil
-               .instance().buildDate(date, startTime), minutes);
-         lastId = p.getId();
-         lastCreationSuccessful = true;
-      } catch (ConflictingProgramException e) {
-         lastCreationSuccessful = false;
-      }
-   }
+	public void setMinutes(int minutes) {
+		this.minutes = minutes;
+	}
 
-   public boolean created() {
-      return lastCreationSuccessful;
-   }
+	public void execute() throws ParseException {
+		try {
+			Program p = schedule.addProgram(programName, episodeName, channel,
+					DateUtil.instance().buildDate(date, startTime), minutes);
+			lastId = p.getId();
+			lastCreationSuccessful = true;
+		} catch (ConflictingProgramException e) {
+			lastCreationSuccessful = false;
+		}
+	}
 
-   public String lastId() {
-      if (lastCreationSuccessful)
-         return lastId;
-      return "n/a";
-   }
+	public boolean created() {
+		return lastCreationSuccessful;
+	}
+
+	public String lastId() {
+		if (lastCreationSuccessful)
+			return lastId;
+		return "n/a";
+	}
 }
