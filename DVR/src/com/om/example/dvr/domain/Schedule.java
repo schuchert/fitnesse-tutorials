@@ -51,4 +51,10 @@ public class Schedule {
    public void clear() {
       scheduledPrograms.clear();
    }
+
+   public void addProgram(Program program) {
+      if (conflictsWithOtherTimeSlots(program.timeSlot))
+         throw new ConflictingProgramException();
+      scheduledPrograms.add(program);
+   }
 }
